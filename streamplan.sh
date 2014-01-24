@@ -74,7 +74,6 @@ FILENAME=$DATE-$TIME-$OPT-$TITLE-$AUTHOR.$TARGET
 
 # if RECORDER has not been set, prompt for selection
 if [ -z "$RECORDER" ]; then
-  echo "no recorder"
   echo "** Select stream recorder:"
   RECORDERS=("vlc" "streamripper" "mplayer")
   select RECORDER in "${RECORDERS[@]}"
