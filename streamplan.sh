@@ -8,7 +8,7 @@
 clear
 
 # folder to store in, no trailing slash
-SAVETO=/home/micz/streamplan
+SAVETO=~/streamplan
 
 # the default format of the recorded streams
 TARGET=mp3
@@ -46,19 +46,20 @@ echo $OPT - $STREAM
 
 DATE=`date +"%Y-%m-%d"`
 echo "** Specify date (format YYYY-MM-DD)"
-echo "Enter = $DATE"
+echo "Hit Enter for today's date = $DATE"
 read INPUT
-if [ "$INPUT" != "" ]; then
+if [ -n "$INPUT" ]; then
 	DATE=$INPUT
 fi
 
 echo "** Specify start time (format hh:mm)"
 read TIME
 
-echo "** Length in minutes (enter = 60 minutes)"
+echo "** Length in minutes"
+echo "Hit Enter for 60 minutes"
 read LENGTH
-if [ "$LENGTH" = "" ]; then
-	$LENGTH=60
+if [ -z "$LENGTH" ]; then
+	LENGTH=60
 fi
 
 echo "** Title (optional)"
@@ -94,6 +95,11 @@ echo $RECSTRING
 
 # this will stop the recording and change the ID3 tags in the recorded file
 STOPSTRING="sleep $[LENGTH*60]; pkill $RECORDER; id3v2 --TPE1 \"$AUTHOR\" --TIT2 \"$TITLE\" --WOAF \"$STREAM\" $SAVETO/${FILENAME// /_}"
+
+# create the save directory if it doesn't exist
+if [ ! -d $SAVETO ]; then
+   mkdir $SAVETO
+fi
 
 # write log file
 echo "*** Start $DATE $TIME ***" >> $SAVETO/log.txt
