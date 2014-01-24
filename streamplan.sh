@@ -8,7 +8,7 @@
 clear
 
 # folder to store in, no trailing slash
-SAVETO=/home/micz/streamplan
+SAVETO=~/streamplan
 
 # the default format of the recorded streams
 TARGET=mp3
@@ -94,6 +94,11 @@ echo $RECSTRING
 
 # this will stop the recording and change the ID3 tags in the recorded file
 STOPSTRING="sleep $[LENGTH*60]; pkill $RECORDER; id3v2 --TPE1 \"$AUTHOR\" --TIT2 \"$TITLE\" --WOAF \"$STREAM\" $SAVETO/${FILENAME// /_}"
+
+# create the save directory if it doesn't exist
+if [ ! -d $SAVETO ]; then
+   mkdir $SAVETO
+fi
 
 # write log file
 echo "*** Start $DATE $TIME ***" >> $SAVETO/log.txt
