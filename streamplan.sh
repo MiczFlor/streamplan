@@ -24,17 +24,17 @@ do
             break
             ;;
         "Dradio Kultur")
-        		# mp3 stream with variable bitrate
+            # mp3 stream with variable bitrate
             STREAM=http://www.deutschlandradio.de/streaming/dkultur.m3u
             break
             ;;
         "NPR")
-        		# mp3 stream
+            # mp3 stream
             STREAM=http://www.npr.org/streams/mp3/nprlive24.pls
             break
             ;;
         "BBC5")
-        		# windows media stream 48kbit
+            # windows media stream 48kbit
             STREAM=http://bbc.co.uk/radio/listen/live/r5l.asx
             break
             ;;
@@ -79,11 +79,11 @@ do
             break
             ;;
         "streamripper")
-        		RECSTRING="streamripper $STREAM -d $SAVETO/ -a ${FILENAME// /_} -s -l $[(LENGTH*62)+180]"
+            RECSTRING="streamripper $STREAM -d $SAVETO/ -a ${FILENAME// /_} -s -l $[(LENGTH*62)+180]"
             break
             ;;
         "mplayer")
-        		RECSTRING="mplayer -dumpstream -dumpfile \"$SAVETO/${FILENAME// /_}\" -playlist \"$STREAM\""
+            RECSTRING="mplayer -dumpstream -dumpfile \"$SAVETO/${FILENAME// /_}\" -playlist \"$STREAM\""
             break
             ;;
         *) echo "Invalid selection";;
