@@ -13,6 +13,9 @@ SAVETO=~/streamplan
 # the default format of the recorded streams
 TARGET=mp3
 
+# if you want to use VLC by default, uncomment the following line (will skip selection below)
+#RECORDER=vlc
+
 echo "** Select radio station:"
 STREAMS=("DLF" "Dradio Kultur" "NPR" "BBC5")
 select OPT in "${STREAMS[@]}"
