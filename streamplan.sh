@@ -46,19 +46,20 @@ echo $OPT - $STREAM
 
 DATE=`date +"%Y-%m-%d"`
 echo "** Specify date (format YYYY-MM-DD)"
-echo "Enter = $DATE"
+echo "Hit Enter for today's date = $DATE"
 read INPUT
-if [ "$INPUT" != "" ]; then
+if [ -n "$INPUT" ]; then
 	DATE=$INPUT
 fi
 
 echo "** Specify start time (format hh:mm)"
 read TIME
 
-echo "** Length in minutes (enter = 60 minutes)"
+echo "** Length in minutes"
+echo "Hit Enter for 60 minutes"
 read LENGTH
-if [ "$LENGTH" = "" ]; then
-	$LENGTH=60
+if [ -z "$LENGTH" ]; then
+	LENGTH=60
 fi
 
 echo "** Title (optional)"
