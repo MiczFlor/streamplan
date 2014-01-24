@@ -13,7 +13,7 @@ SAVETO=~/streamplan
 # the default format of the recorded streams
 TARGET=mp3
 
-# if you want to use VLC by default, uncomment the following line (will skip selection below)
+# set recorder "vlc" "streamripper" "mplayer" or comment out to prompt user for selection (see below)
 #RECORDER=vlc
 
 echo "** Select radio station:"
@@ -72,29 +72,41 @@ read AUTHOR
 
 FILENAME=$DATE-$TIME-$OPT-$TITLE-$AUTHOR.$TARGET
 
-echo "** Select stream recorder:"
-# Don't prompt for the recorder if you know what you want: just assign e.g. RECORDER=vlc and the matching RECSTRING=
-RECORDERS=("vlc" "streamripper" "mplayer")
-select RECORDER in "${RECORDERS[@]}"
-do
+# if RECORDER has not been set, prompt for selection
+if [ -z "$RECORDER" ]; then
+  echo "no recorder"
+  echo "** Select stream recorder:"
+  RECORDERS=("vlc" "streamripper" "mplayer")
+  select RECORDER in "${RECORDERS[@]}"
+  do
     case $RECORDER in
-        "vlc")
-            RECSTRING="cvlc --sout \"#transcode{acodec=$TARGET,ab=128,channels=2,samplerate=44100}:std{access=file,mux=$TARGET,dst=$SAVETO/${FILENAME// /_}}\" $STREAM"
-            break
-            ;;
-        "streamripper")
-            RECSTRING="streamripper $STREAM -d $SAVETO/ -a ${FILENAME// /_} -s -l $[(LENGTH*62)+180]"
-            break
-            ;;
-        "mplayer")
-            RECSTRING="mplayer -dumpstream -dumpfile \"$SAVETO/${FILENAME// /_}\" -playlist \"$STREAM\""
-            break
-            ;;
-        *) echo "Invalid selection";;
+      "vlc")
+        break
+        ;;
+      "streamripper")
+        break
+        ;;
+      "mplayer")
+        break
+        ;;
+      *) echo "Invalid selection";;
     esac
-done
-echo "Your choice:"
-echo $RECSTRING
+  done
+  echo "Your choice:"
+  echo $RECORDER
+fi
+# create recording command depending on RECORDER
+case $RECORDER in
+  "vlc")
+    RECSTRING="cvlc --sout \"#transcode{acodec=$TARGET,ab=128,channels=2,samplerate=44100}:std{access=file,mux=$TARGET,dst=$SAVETO/${FILENAME// /_}}\" $STREAM"
+    ;;
+  "streamripper")
+    RECSTRING="streamripper $STREAM -d $SAVETO/ -a ${FILENAME// /_} -s -l $[(LENGTH*62)+180]"
+    ;;
+  "mplayer")
+    RECSTRING="mplayer -dumpstream -dumpfile \"$SAVETO/${FILENAME// /_}\" -playlist \"$STREAM\""
+    ;;
+esac
 
 # this will stop the recording and change the ID3 tags in the recorded file
 STOPSTRING="sleep $[LENGTH*60]; pkill $RECORDER; id3v2 --TPE1 \"$AUTHOR\" --TIT2 \"$TITLE\" --WOAF \"$STREAM\" $SAVETO/${FILENAME// /_}"
