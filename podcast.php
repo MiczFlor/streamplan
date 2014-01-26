@@ -7,10 +7,19 @@
     
     This php script will create a podcast XML on the fly
     listing all mp3 files in the same directory.
-/**/
+*/
 
 $channeltitle   = "Streamplan files";
 $channelauthor  = "Various";
+/* $sortby sets the order in which tracks are listed. 
+   Options: 
+   "newest" = newest on top
+   "oldest" = oldest on top
+   "filedesc" = alphabetically descending
+   "fileasc" = alphabetically ascending
+   default: "filedesc" (== how streamplan.sh works)
+*/
+$sortby = "filedesc"; 
 
 $dir = "http://".$_SERVER['SERVER_NAME'];
 $parts = explode('/',$_SERVER['REQUEST_URI']);
@@ -27,13 +36,33 @@ print"<?xml version='1.0' encoding='UTF-8'?>
   <link>$dir</link>
   <itunes:author>$channelauthor</itunes:author>
 ";
-
+/**/
 // read all mp3 files in the directory
-$mp3files = glob("*.mp3");
-// sort by filename reverse for newest on top (streamplan.sh filenames starts with date) 
-arsort($mp3files);
+$temp = glob("*.mp3");
+// create array with timestamp of last changes as key
+foreach ($temp as $filename) {
+  $mp3files[filemtime($filename)] = $filename;
+}
+// change the order of the list according to $sortby set above
+switch ($sortby) {
+  case "newest":
+    krsort($mp3files);
+    break;
+  case "oldest":
+    ksort($mp3files);
+    break;
+  case "fileasc":
+    natcasesort($mp3files);
+    break;
+  default:
+    // filedesc 
+    natcasesort($mp3files);
+    $mp3files = array_reverse($mp3files);
+    break;
+}
+// go through files and create <item> for podcast
 foreach ($mp3files as $filename) {
-  // read id3 tags from mp3 file
+  // set empty array for metadata
   $iteminfo = array(
     "TPE1" => "",
     "TIT2" => "",
@@ -43,8 +72,12 @@ foreach ($mp3files as $filename) {
   // read id3 from shell command
   $idtag = explode("\n",shell_exec("id3v2 -R $filename"));
   foreach($idtag as $line) {
-  	 list($key, $value) = explode(": ",$line);
-  	 $iteminfo[$key] = $value;
+  	 // to to match key => value from each line
+    preg_match("/((\w+): (.*))/", $line, $results);
+  	 // if ID3 tag found, results will return four values
+  	 if(count($results) == 4) {
+  	 	$iteminfo[$results[2]] = $results[3];
+  	 }
   }
   // if title too short, use filename as title
   if (strlen($iteminfo['TIT2']) < 2) {
@@ -55,7 +88,7 @@ foreach ($mp3files as $filename) {
     <title>".$iteminfo['TIT2']."</title>
     <itunes:author>".$iteminfo['TPE1']."</itunes:author>
     <itunes:subtitle>".$iteminfo['WOAF']."</itunes:subtitle>
-    <description>".$iteminfo['TIT2']." by ".$iteminfo['TPE1'].". Recorded on ".date ("r", filemtime($filename))." from stream URL: ".$iteminfo['WOAF']."</description>
+    <description>".$iteminfo['TIT2']." by ".$iteminfo['TPE1'].". ".$iteminfo['COMM']." Recorded on ".date ("r", filemtime($filename))." from stream URL: ".$iteminfo['WOAF']."</description>
     <enclosure url=\"".$dir.$filename."\" length=\"".filesize($filename)."\" type=\"audio/mpeg\"/>
     <guid>".$dir.$filename."</guid>
     <pubDate>".date ("r", filemtime($filename))."</pubDate>
