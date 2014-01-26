@@ -13,8 +13,8 @@ SAVETO=~/streamplan
 # the default format of the recorded streams
 TARGET=mp3
 
-# set recorder "vlc" "streamripper" "mplayer" or comment out to prompt user for selection (see below)
-#RECORDER=vlc
+# set recorder "vlc" "streamripper" "mplayer" or comment out to prompt user for selection
+RECORDER=vlc
 
 echo "** Select radio station:"
 STREAMS=("DLF" "Dradio Kultur" "NPR" "BBC5")
@@ -108,7 +108,7 @@ case $RECORDER in
 esac
 
 # this will stop the recording and change the ID3 tags in the recorded file
-STOPSTRING="sleep $[LENGTH*60]; pkill $RECORDER; id3v2 --TPE1 \"$AUTHOR\" --TIT2 \"$TITLE\" --WOAF \"$STREAM\" $SAVETO/${FILENAME// /_}"
+STOPSTRING="sleep $[LENGTH*60]; pkill $RECORDER; id3v2 --TIT2 \"$TITLE\" --TPE1 \"$AUTHOR\" --TPUB \"$OPT\" --TALB \"$STREAM\" --WOAF \"$STREAM\" --TRDA \"$DATE $TIME\" $SAVETO/${FILENAME// /_}"
 
 # create the save directory if it doesn't exist
 if [ ! -d $SAVETO ]; then
