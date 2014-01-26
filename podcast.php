@@ -72,16 +72,16 @@ foreach ($mp3files as $filename) {
   // read id3 from shell command
   $idtag = explode("\n",shell_exec("id3v2 -R $filename"));
   foreach($idtag as $line) {
-  	 // to to match key => value from each line
+    // to to match key => value from each line
     preg_match("/((\w+): (.*))/", $line, $results);
-  	 // if ID3 tag found, results will return four values
-  	 if(count($results) == 4) {
-  	 	$iteminfo[$results[2]] = $results[3];
-  	 }
+    // if ID3 tag found, results will return four values
+    if(count($results) == 4) {
+      $iteminfo[$results[2]] = $results[3];
+    }
   }
   // if title too short, use filename as title
   if (strlen($iteminfo['TIT2']) < 2) {
-  	 $iteminfo['TIT2'] = $filename;
+    $iteminfo['TIT2'] = $filename;
   }
   print "
   <item>
