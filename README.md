@@ -3,6 +3,9 @@ streamplan
 
 Bash script for scheduling stream recordings from the command line. 
 
+streamplan.sh
+-------------
+
 Usage:
 
 ./streamplan.sh
@@ -13,7 +16,7 @@ Using cvlc will transcode the recorded stream into the format specified in $TARG
 For more on transcoding and file formats see https://wiki.videolan.org/Codec/
 
 podcast.php
-===========
+-----------
 
 Creating podcast xml file on the fly for mp3 files in same folder.
 
