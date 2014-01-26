@@ -39,9 +39,9 @@ print"<?xml version='1.0' encoding='UTF-8'?>
 /**/
 // read all mp3 files in the directory
 $temp = glob("*.mp3");
-// create array with timestamp of last changes as key
+// create array with timestamp.filename as key
 foreach ($temp as $filename) {
-  $mp3files[filemtime($filename)] = $filename;
+  $mp3files[filemtime($filename).$filename] = $filename;
 }
 // change the order of the list according to $sortby set above
 switch ($sortby) {
