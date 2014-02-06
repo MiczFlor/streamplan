@@ -4,9 +4,11 @@ streamplan
 Bash script for scheduling stream recordings from the command line. 
 
 Requires:
+
 * id3v2
 * vlc-nox
 * procps
+
 Install: sudo apt-get install id3v2 vlc-nox procps
 
 
