@@ -24,6 +24,14 @@ You will be prompted for the station to record, the time and length of the recor
 Using cvlc will transcode the recorded stream into the format specified in $TARGET.
 For more on transcoding and file formats see https://wiki.videolan.org/Codec/
 
+More inforamtion and research in the related blog posts:
+
+Schedule stream recordings from the command line, Part 1
+https://blog.sourcefabric.org/en/news/blog/2076/
+
+Schedule stream recordings from the command line, Part 2
+https://blog.sourcefabric.org/en/news/blog/2077/
+
 podcast.php
 -----------
 
